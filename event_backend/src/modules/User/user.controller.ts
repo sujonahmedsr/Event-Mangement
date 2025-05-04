@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import status from "http-status";
@@ -24,7 +24,19 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await userService.getSingleUser(id)
+    sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'User fetched successfully',
+      data: result,
+    });
+  });
+
 export const userController = {
     getAllUsers,
-    createUser
+    createUser,
+    getUserByEmail
 }

@@ -9,6 +9,14 @@ const getAllUsers = async () => {
     return users
 }
 
+const getSingleUser = async (id: string) => {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if(!user){
+        throw new ApiError(status.NOT_FOUND, "User not found.")
+    }
+    return user
+}
+
 const createUser = async (
     payload: User
 ): Promise<User> => {
@@ -40,5 +48,6 @@ const createUser = async (
 };
 export const userService = {
     createUser,
+    getSingleUser,
     getAllUsers
 }

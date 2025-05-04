@@ -6,6 +6,7 @@ import { userSchema } from "./user.validation";
 const userRoute = Router()
 
 userRoute.get('/', userController.getAllUsers)
+userRoute.get('/:id', userController.getUserByEmail)
 userRoute.post('/', validateRequest(userSchema), userController.createUser)
 
 export default userRoute
