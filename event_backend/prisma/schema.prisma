@@ -24,11 +24,11 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  event         Event[]
-  participation Participation[]
-  sent_invitations Invitation[] @relation("SentInvitations")
-  received_invitations  Invitation[] @relation("ReceivedInvitations")
-  review Review[]
+  event                Event[]
+  participation        Participation[]
+  sent_invitations     Invitation[]    @relation("SentInvitations")
+  received_invitations Invitation[]    @relation("ReceivedInvitations")
+  review               Review[]
 
   @@map("users")
 }
@@ -40,17 +40,18 @@ model Event {
   dateTime    DateTime
   location    String
   fee         Float     @default(0)
+  isPaid      Boolean   @default(false)
+  isPrivate   Boolean   @default(false)
   type        EventType
-
-  creator   User   @relation(fields: [creatorId], references: [id])
-  creatorId String
+  creator     User      @relation(fields: [creatorId], references: [id])
+  creatorId   String
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   participation Participation[]
   invitation    Invitation[]
-  review Review[]
+  review        Review[]
 
   @@map("events")
 }
@@ -83,11 +84,11 @@ model Invitation {
 }
 
 model Review {
-  id       String  @id @default(uuid())
-  user_id  String
-  event_id String
-  rating   Int
-  comment  String?
+  id         String   @id @default(uuid())
+  user_id    String
+  event_id   String
+  rating     Int
+  comment    String?
   created_at DateTime @default(now())
 
   user  User  @relation(fields: [user_id], references: [id])
