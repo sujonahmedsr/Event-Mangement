@@ -33,9 +33,8 @@ const getSingleEvent: RequestHandler = catchAsync(async (req, res) => {
     })
 })
 const updateEvent: RequestHandler = catchAsync(async (req, res) => {
-    const {id} = req.params
-    const body = req.body
-    const result = await eventService.updateEvent(id, body)
+    const { id } = req.params
+    const result = await eventService.updateEvent(id, req.body)
     sendResponse(res, {
         statusCode: status.CREATED,
         message: "Event Updated Successfully",
