@@ -40,12 +40,13 @@ model Event {
   dateTime    DateTime
   location    String
   fee         Float     @default(0)
-  isPaid      Boolean   
-  isPrivate   Boolean   
+  isPaid      Boolean
+  isPrivate   Boolean
   type        EventType
   creatorId   String
+  isDeleted   Boolean   @default(false)
 
-  creator     User      @relation(fields: [creatorId], references: [id])
+  creator User @relation(fields: [creatorId], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "events" ADD COLUMN     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+ALTER COLUMN "isPaid" DROP DEFAULT,
+ALTER COLUMN "isPrivate" DROP DEFAULT;
