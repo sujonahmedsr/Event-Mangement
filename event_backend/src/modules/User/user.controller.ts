@@ -1,4 +1,4 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import status from "http-status";
@@ -15,12 +15,12 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   });
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
-    const result = await userService.createUser(req.body);
+    await userService.createUser(req.body);
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
         message: "User Created successfully!",
-        data: result,
+        data: null,
     });
 });
 

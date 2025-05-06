@@ -3,10 +3,10 @@ import { userController } from "./user.controller";
 import validateRequest from "../../middlewares/validateRequest";
 import { userSchema } from "./user.validation";
 
-const userRoute = Router()
+const router = Router()
 
-userRoute.get('/', userController.getAllUsers)
-userRoute.get('/:id', userController.getUserByEmail)
-userRoute.post('/', validateRequest(userSchema), userController.createUser)
+router.get('/', userController.getAllUsers)
+router.get('/:id', userController.getUserByEmail)
+router.post('/', validateRequest(userSchema), userController.createUser)
 
-export default userRoute
+export const UserRoutes = router

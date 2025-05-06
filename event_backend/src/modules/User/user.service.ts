@@ -5,7 +5,17 @@ import ApiError from "../../errors/ApiError";
 import status from "http-status";
 
 const getAllUsers = async () => {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+        select:{
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            is_deleted: true,
+            created_at: true,
+            updated_at: true
+        }
+    });
     return users
 }
 
