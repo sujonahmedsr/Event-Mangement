@@ -26,7 +26,7 @@ const getAllParticipants: RequestHandler = catchAsync(async (req, res) => {
 })
 const getSingleParticipant: RequestHandler = catchAsync(async (req, res) => {
     const { eventId } = req.params
-    const result = await participantService.singleParticipants(eventId)
+    const result = await participantService.singleParticipant(eventId)
     sendResponse(res, {
         statusCode: status.CREATED,
         message: "Participant Fetched Successfully",

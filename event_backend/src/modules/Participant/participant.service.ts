@@ -10,13 +10,6 @@ const createParticipant = async (eventId: string, userId: string) => {
         const event = await tx.event.findUnique({ where: { id: eventId } });
         if (!event) throw new ApiError(StatusCode.NOT_FOUND, "Event not found.");
 
-        const alreadyParticipated = await tx.participation.findFirst({
-            where: { eventId, userId }
-        });
-        if (alreadyParticipated) {
-            throw new ApiError(StatusCode.CONFLICT, "Already participating in event.");
-        }
-
         const created = await tx.participation.create({
             data: { eventId, userId }
         });
@@ -31,18 +24,25 @@ const getAllParticipants = async () => {
     const result = await prisma.participation.findMany({
         where: {
             isDeleted: false
-        }
+        },
+        include: { user: true, event: true }
     })
     return result
 }
-const singleParticipants = async (eventId: string) => {
-    const result = await prisma.participation.findUnique({
+const singleParticipant = async (id: string) => {
+    const result = await prisma.participation.findFirst({
         where: {
-            id: eventId
+            id,
+            isDeleted: false
+        },
+        include: {
+            user: true,
+            event: true
         }
-    })
-    return result
-}
+    });
+    return result;
+};
+
 const deleteParticipants = async (eventId: string) => {
     const result = await prisma.participation.update({
         where: {
@@ -57,6 +57,6 @@ const deleteParticipants = async (eventId: string) => {
 export const participantService = {
     createParticipant,
     getAllParticipants,
-    singleParticipants,
+    singleParticipant,
     deleteParticipants
 }
