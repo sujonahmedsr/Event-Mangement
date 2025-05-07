@@ -20,7 +20,12 @@ const getAllUsers = async () => {
 }
 
 const getSingleUser = async (id: string) => {
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({ where: { id }, 
+        include: {
+            event: true,
+            received_invitations: true,
+            sent_invitations: true
+    } });
     if(!user){
         throw new ApiError(status.NOT_FOUND, "User not found.")
     }

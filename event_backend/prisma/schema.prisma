@@ -37,16 +37,16 @@ model Event {
   id          String    @id @default(uuid())
   title       String
   description String
-  dateTime    DateTime
+  date_time   DateTime
   location    String
   fee         Float     @default(0)
-  isPaid      Boolean
-  isPrivate   Boolean
+  is_paid     Boolean
+  is_private  Boolean
   type        EventType
-  creatorId   String
-  isDeleted   Boolean   @default(false)
+  is_deleted  Boolean   @default(false)
 
-  creator User @relation(fields: [creatorId], references: [id])
+  creator_id String
+  creator    User   @relation(fields: [creator_id], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -59,16 +59,19 @@ model Event {
 }
 
 model Participation {
-  id            String     @id @default(uuid())
-  user          User       @relation(fields: [userId], references: [id])
-  userId        String
-  event         Event      @relation(fields: [eventId], references: [id])
-  eventId       String
-  status        JoinStatus @default(PENDING)
-  paymentStatus Boolean    @default(false)
-  isDeleted     Boolean    @default(false)
-  createdAt     DateTime   @default(now())
+  id             String     @id @default(uuid())
+  user           User       @relation(fields: [user_id], references: [id])
+  user_id        String
+  event          Event      @relation(fields: [event_id], references: [id])
+  event_id       String
+  status         JoinStatus @default(PENDING)
+  payment_status Boolean    @default(false)
+  is_deleted     Boolean    @default(false)
+  created_at     DateTime   @default(now())
 
+  @@unique([event_id, user_id])
+  @@index([event_id])
+  @@index([user_id])
   @@map("participations")
 }
 
@@ -78,9 +81,8 @@ model Invitation {
   sender_id   String
   receiver_id String
   status      JoinStatus @default(PENDING)
-  paymentId   String?
-  createdAt   DateTime   @default(now())
-  isDeleted   Boolean    @default(false)
+  created_at  DateTime   @default(now())
+  is_deleted  Boolean    @default(false)
   event       Event      @relation(fields: [event_id], references: [id])
   sender      User       @relation("SentInvitations", fields: [sender_id], references: [id])
   receiver    User       @relation("ReceivedInvitations", fields: [receiver_id], references: [id])
@@ -93,7 +95,7 @@ model Review {
   rating     Int
   comment    String?
   created_at DateTime @default(now())
-  isDeleted  Boolean  @default(false)
+  is_deleted Boolean  @default(false)
   user       User     @relation(fields: [user_id], references: [id])
   event      Event    @relation(fields: [event_id], references: [id])
 

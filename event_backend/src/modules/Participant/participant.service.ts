@@ -3,20 +3,9 @@ import ApiError from "../../errors/ApiError"
 import prisma from "../../utils/prisma"
 
 const createParticipant = async (eventId: string, userId: string) => {
-    const result = await prisma.$transaction(async (tx) => {
-        const user = await tx.user.findUnique({ where: { id: userId } });
-        if (!user) throw new ApiError(StatusCode.NOT_FOUND, "User not found.");
+    const event = await prisma.event.findUnique({ where: { id: eventId, is: false } });
+    if (!event) throw new ApiError(StatusCode.NOT_FOUND, "Event not found.");
 
-        const event = await tx.event.findUnique({ where: { id: eventId } });
-        if (!event) throw new ApiError(StatusCode.NOT_FOUND, "Event not found.");
-
-        const created = await tx.participation.create({
-            data: { eventId, userId }
-        });
-        return created;
-    });
-
-    return result;
 };
 
 
