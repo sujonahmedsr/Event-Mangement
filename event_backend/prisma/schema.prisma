@@ -25,13 +25,13 @@ model User {
   updated_at DateTime @updatedAt
 
   event                Event[]
-  sent_invitations     Invitation[]    @relation("SentInvitations")
-  received_invitations Invitation[]    @relation("ReceivedInvitations")
+  sent_invitations     Invitation[]  @relation("SentInvitations")
+  received_invitations Invitation[]  @relation("ReceivedInvitations")
   review               Review[]
+  Participant          Participant[]
+  Payment              Payment[]
 
   @@map("users")
-  Participant Participant[]
-  Payment Payment[]
 }
 
 model Event {
@@ -53,14 +53,13 @@ model Event {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  invitation    Invitation[]
-  review        Review[]
+  invitation  Invitation[]
+  review      Review[]
+  Participant Participant[]
+  Payment     Payment[]
 
   @@map("events")
-  Participant Participant[]
-  Payment Payment[]
 }
-
 
 model Invitation {
   id          String     @id @default(uuid())
@@ -104,6 +103,9 @@ model Review {
   user       User     @relation(fields: [user_id], references: [id])
   event      Event    @relation(fields: [event_id], references: [id])
 
+  @@unique([user_id, event_id])
+  @@index([event_id])
+  @@index([user_id])
   @@map("reviews")
 }
 
