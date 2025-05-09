@@ -1,7 +1,8 @@
 import StatusCode from "http-status"
 import ApiError from "../../errors/ApiError"
 import prisma from "../../utils/prisma"
-import { ApprovalStatus, EventStatus, PaymentStatus } from "@prisma/client";
+import { ApprovalStatus, EventStatus, PaymentStatus, Role } from "@prisma/client";
+import { JwtPayload } from "jsonwebtoken";
 
 const createParticipant = async (eventId: string, userId: string) => {
     const event = await prisma.event.findUnique({ where: { id: eventId, is_deleted: false } });
@@ -111,9 +112,73 @@ const participants = async (eventId: string) => {
     return result
 }
 
+const ApproveParticipant = async (participantId: string, user: JwtPayload) => {
+    const participant = await prisma.participant.findUnique({
+      where: { id: participantId },
+    });
+  
+    if (!participant) {
+      throw new ApiError(StatusCode.NOT_FOUND, 'Participant not found');
+    }
+  
+    if (participant.approval_status !== ApprovalStatus.PENDING) {
+      throw new ApiError(StatusCode.BAD_REQUEST, 'Participant is not pending');
+    }
+  
+    if (user.role !== Role.ADMIN && participant.user_id !== user.id) {
+      throw new ApiError(
+        StatusCode.FORBIDDEN,
+        'You are not allowed to approve this participant',
+      );
+    }
+  
+    const result = await prisma.participant.update({
+      where: { id: participantId },
+      data: {
+        approval_status: ApprovalStatus.APPROVED,
+      },
+    });
+  
+    if (!result) {
+      throw new ApiError(StatusCode.NOT_FOUND, 'Participant not found');
+    }
+  
+    return result;
+  };
+  
+  const RejectParticipant = async (participantId: string, user: JwtPayload) => {
+    const participant = await prisma.participant.findUnique({
+      where: { id: participantId },
+    });
+  
+    if (!participant) {
+      throw new ApiError(StatusCode.NOT_FOUND, 'Participant not found');
+    }
+  
+    if (user.role !== Role.ADMIN && participant.user_id !== user.id) {
+      throw new ApiError(
+        StatusCode.FORBIDDEN,
+        'You are not allowed to reject this participant',
+      );
+    }
+  
+    const result = await prisma.participant.update({
+      where: { id: participantId },
+      data: { approval_status: ApprovalStatus.REJECTED },
+    });
+  
+    if (!result) {
+      throw new ApiError(StatusCode.NOT_FOUND, 'Participant not found');
+    }
+  
+    return result;
+  };
+
 
 
 export const participantService = {
     createParticipant,
-    participants
+    participants,
+    ApproveParticipant,
+    RejectParticipant
 }

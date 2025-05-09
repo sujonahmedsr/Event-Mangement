@@ -26,7 +26,39 @@ const participants: RequestHandler = catchAsync(async (req, res) => {
     })
 })
 
+const ApproveParticipant = catchAsync(async (req: Request & {user?: any}, res: Response) => {
+    const participantId = req.params.id;
+    const user = req.user;
+    const result = await participantService.ApproveParticipant(
+      participantId,
+      user,
+    );
+    sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'Participant approved successfully',
+      data: result,
+    });
+  });
+  
+  const RejectParticipant = catchAsync(async (req: Request  & {user?: any}, res: Response) => {
+    const participantId = req.params.id;
+    const user = req.user;
+    const result = await participantService.RejectParticipant(
+      participantId,
+      user,
+    );
+    sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'Participant rejected successfully',
+      data: result,
+    });
+  });
+
 export const participantController = {
     createParticipant,
     participants,
+    ApproveParticipant,
+    RejectParticipant
 }
