@@ -3,6 +3,8 @@ import catchAsync from "../../utils/catchAsync"
 import { eventService } from "./event.service"
 import sendResponse from "../../utils/sendResponse"
 import status from "http-status"
+import EventConstants from "./event.constant"
+import pick from "../../utils/pick"
 
 const createEvent: RequestHandler = catchAsync(async (req, res) => {
     const result = await eventService.createEvent(req.body)
@@ -14,12 +16,16 @@ const createEvent: RequestHandler = catchAsync(async (req, res) => {
     })
 })
 const getAllEvents: RequestHandler = catchAsync(async (req, res) => {
-    const result = await eventService.getAllEvents()
+    const filters = pick(req.query, EventConstants.FilterableFields);
+
+    const options = pick(req.query, ['limit', 'page', 'sort_by', 'sort_order']);
+    const result = await eventService.getAllEvents(filters, options)
     sendResponse(res, {
         statusCode: status.CREATED,
         message: "Events Fetched Successfully",
         success: true,
-        data: result
+        data: result.data,
+        meta: result.meta,
     })
 })
 const getSingleEvent: RequestHandler = catchAsync(async (req, res) => {
