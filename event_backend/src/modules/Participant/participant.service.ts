@@ -1,51 +1,113 @@
 import StatusCode from "http-status"
 import ApiError from "../../errors/ApiError"
 import prisma from "../../utils/prisma"
+import { ApprovalStatus, EventStatus, PaymentStatus } from "@prisma/client";
 
 const createParticipant = async (eventId: string, userId: string) => {
-    const event = await prisma.event.findUnique({ where: { id: eventId, is: false } });
+    const event = await prisma.event.findUnique({ where: { id: eventId, is_deleted: false } });
     if (!event) throw new ApiError(StatusCode.NOT_FOUND, "Event not found.");
-
-};
-
-
-const getAllParticipants = async () => {
-    const result = await prisma.participation.findMany({
-        where: {
-            isDeleted: false
-        },
-        include: { user: true, event: true }
-    })
-    return result
-}
-const singleParticipant = async (id: string) => {
-    const result = await prisma.participation.findFirst({
-        where: {
-            id,
-            isDeleted: false
-        },
-        include: {
-            user: true,
-            event: true
-        }
+    const participant = await prisma.participant.findUnique({
+        where: { event_id_user_id: { event_id: eventId, user_id: userId } },
     });
+
+    if (participant) {
+        throw new ApiError(
+            StatusCode.BAD_REQUEST,
+            'You are already a participant',
+        );
+    }
+
+    if (event.status === EventStatus.COMPLETED) {
+        throw new ApiError(StatusCode.FORBIDDEN, 'Event is completed');
+    }
+
+    if (event.status === EventStatus.CANCELLED) {
+        throw new ApiError(StatusCode.FORBIDDEN, 'Event is cancelled');
+    }
+
+    let result;
+
+    if (!event.is_private && !event.is_paid) {
+        // instant acceptance
+        result = await prisma.participant.create({
+            data: {
+                event_id: eventId,
+                user_id: userId,
+                payment_status: PaymentStatus.FREE,
+                approval_status: ApprovalStatus.APPROVED,
+            },
+        });
+    } else if (event.is_private && event.is_paid) {
+        // payment flow
+        await prisma.payment.create({
+            data: {
+                event_id: eventId,
+                user_id: userId,
+                amount: event.fee,
+                transaction_id: 'PaymentUtils.generateTransactionId()',
+            },
+        });
+        result = await prisma.participant.create({
+            data: {
+                event_id: eventId,
+                user_id: userId,
+                payment_status: PaymentStatus.PENDING,
+                approval_status: ApprovalStatus.PENDING,
+            },
+        });
+    } else if (!event.is_private && event.is_paid) {
+        // payment flow
+        await prisma.payment.create({
+            data: {
+                event_id: eventId,
+                user_id: userId,
+                amount: event.fee,
+                transaction_id: "PaymentUtils.generateTransactionId()",
+            },
+        });
+        result = await prisma.participant.create({
+            data: {
+                event_id: eventId,
+                user_id: userId,
+                payment_status: PaymentStatus.PENDING,
+                approval_status: ApprovalStatus.PENDING,
+            },
+        });
+    } else if (event.is_private && !event.is_paid) {
+        // pending approval
+        result = await prisma.participant.create({
+            data: {
+                event_id: eventId,
+                user_id: userId,
+                payment_status: PaymentStatus.FREE,
+                approval_status: ApprovalStatus.PENDING,
+            },
+        });
+    }
+
     return result;
 };
 
-const deleteParticipants = async (eventId: string) => {
-    const result = await prisma.participation.update({
+
+const participants = async (eventId: string) => {
+    const result = await prisma.event.findMany({
         where: {
             id: eventId
         },
-        data: {
-            isDeleted: true
+        include: {
+            Participant: {
+                include: {
+                    user: true
+                }
+            }
         }
     })
     return result
 }
+
+
+
 export const participantService = {
     createParticipant,
-    getAllParticipants,
-    singleParticipant,
-    deleteParticipants
+    participants
 }

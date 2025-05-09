@@ -1,4 +1,4 @@
-import { Event } from "@prisma/client";
+import { Event, EventStatus } from "@prisma/client";
 import prisma from "../../utils/prisma";
 import ApiError from "../../errors/ApiError";
 import httpStatus from "http-status";
@@ -6,7 +6,7 @@ import httpStatus from "http-status";
 // Create Event
 const createEvent = async (payload: Event) => {
   const existingUser = await prisma.user.findUnique({
-    where: { id: payload.creatorId },
+    where: { id: payload.creator_id },
   });
 
   if (!existingUser) {
@@ -23,18 +23,21 @@ const createEvent = async (payload: Event) => {
 // Get All Events
 const getAllEvents = async () => {
   return await prisma.event.findMany({
-    where: { isDeleted: false },
-    orderBy: { dateTime: "asc" },
+    where: { is_deleted: false },
+    orderBy: { date_time: "asc" },
   });
 };
 
 // Get Single Event
 const getSingleEvent = async (id: string) => {
   const event = await prisma.event.findUnique({
-    where: { id },
+    where: { id, is_deleted: false },
+    include: {
+      creator: true
+    }
   });
 
-  if (!event || event.isDeleted) {
+  if (!event || event.is_deleted) {
     throw new ApiError(httpStatus.NOT_FOUND, "Event not found.");
   }
 
@@ -45,8 +48,12 @@ const getSingleEvent = async (id: string) => {
 const updateEvent = async (id: string, data: Partial<Event>) => {
   const existingEvent = await prisma.event.findUnique({ where: { id } });
 
-  if (!existingEvent || existingEvent.isDeleted) {
+  if (!existingEvent || existingEvent.is_deleted) {
     throw new ApiError(httpStatus.NOT_FOUND, "Event not found.");
+  }
+
+  if (existingEvent.status === EventStatus.CANCELLED || existingEvent.status === EventStatus.COMPLETED) {
+    throw new ApiError(httpStatus.NOT_FOUND, "You Can not update this event now.");
   }
 
   const updatedEvent = await prisma.event.update({
@@ -59,15 +66,15 @@ const updateEvent = async (id: string, data: Partial<Event>) => {
 
 // Soft Delete Event
 const deleteEvent = async (id: string) => {
-  const existingEvent = await prisma.event.findUnique({ where: { id } });
+  const existingEvent = await prisma.event.findUnique({ where: { id, is_deleted: false } });
 
-  if (!existingEvent || existingEvent.isDeleted) {
+  if (!existingEvent || existingEvent.is_deleted) {
     throw new ApiError(httpStatus.NOT_FOUND, "Event not found.");
   }
 
   await prisma.event.update({
     where: { id },
-    data: { isDeleted: true },
+    data: { is_deleted: true },
   });
 
   return { message: "Event soft deleted successfully" };

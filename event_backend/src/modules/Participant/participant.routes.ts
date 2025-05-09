@@ -5,9 +5,7 @@ import { Role } from "@prisma/client";
 
 const route = Router()
 
-route.post('/:eventId', auth(Role.USER), participantController.createParticipant)
-route.get("/", participantController.getAllParticipants)
-route.get("/:eventId", participantController.getSingleParticipant)
-route.delete("/:eventId", participantController.deleteParticipant)
+route.post('/:eventId/join', auth(Role.USER), participantController.createParticipant)
+route.get("/:eventId/participants", auth(Role.USER, Role.ADMIN), participantController.participants)
 
 export const ParticipantRoutes = route

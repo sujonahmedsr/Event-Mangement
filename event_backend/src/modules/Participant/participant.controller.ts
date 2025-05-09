@@ -15,18 +15,9 @@ const createParticipant = catchAsync(async (req: Request & {user?: any}, res: Re
         data: result
     })
 })
-const getAllParticipants: RequestHandler = catchAsync(async (req, res) => {
-    const result = await participantService.getAllParticipants()
-    sendResponse(res, {
-        statusCode: status.CREATED,
-        message: "Participants Fetched Successfully",
-        success: true,
-        data: result
-    })
-})
-const getSingleParticipant: RequestHandler = catchAsync(async (req, res) => {
+const participants: RequestHandler = catchAsync(async (req, res) => {
     const { eventId } = req.params
-    const result = await participantService.singleParticipant(eventId)
+    const result = await participantService.participants(eventId)
     sendResponse(res, {
         statusCode: status.CREATED,
         message: "Participant Fetched Successfully",
@@ -34,20 +25,8 @@ const getSingleParticipant: RequestHandler = catchAsync(async (req, res) => {
         data: result
     })
 })
-const deleteParticipant: RequestHandler = catchAsync(async (req, res) => {
-    const { eventId } = req.params
-    await participantService.deleteParticipants(eventId)
-    sendResponse(res, {
-        statusCode: status.CREATED,
-        message: "Participant Deleted",
-        success: true,
-        data: null
-    })
-})
 
 export const participantController = {
     createParticipant,
-    getAllParticipants,
-    getSingleParticipant,
-    deleteParticipant
+    participants,
 }
