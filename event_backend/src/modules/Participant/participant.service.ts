@@ -97,7 +97,13 @@ const participants = async (eventId: string) => {
         include: {
             Participant: {
                 include: {
-                    user: true
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true
+                        }
+                    }
                 }
             }
         }
