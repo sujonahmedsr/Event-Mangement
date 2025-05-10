@@ -12,7 +12,7 @@ const SubmitReview = catchAsync(async (req: Request & { user?: any }, res) => {
     const result = await ReviewService.SubmitReview(eventId, reviewData, user);
 
     sendResponse(res, {
-        statusCode: httpStatus.CREATED,
+        statusCode: httpStatus.OK,
         success: true,
         message: 'Review submitted successfully',
         data: result,

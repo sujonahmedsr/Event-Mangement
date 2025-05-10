@@ -19,7 +19,7 @@ const participants: RequestHandler = catchAsync(async (req, res) => {
     const { eventId } = req.params
     const result = await participantService.participants(eventId)
     sendResponse(res, {
-        statusCode: status.CREATED,
+        statusCode: status.OK,
         message: "Participant Fetched Successfully",
         success: true,
         data: result

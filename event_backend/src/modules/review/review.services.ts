@@ -177,6 +177,8 @@ const DeleteReview = async (reviewId: string, user: JwtPayload) => {
 };
 
 const ReviewService = {
+  SubmitReview,
+  GetReviews,
   UpdateReview,
   DeleteReview,
 };

@@ -30,7 +30,7 @@ const createEvent = async (payload: Event) => {
 const getAllEvents = async (filters: IGetEventsParams,
   options: IPaginationOptions,) => {
     const { page, limit, skip } = calculatePagination(options);
-    const { search } = filters;
+    const { search, ...restFilters } = filters;
   
     const andConditions: Prisma.EventWhereInput[] = [];
   
@@ -42,6 +42,22 @@ const getAllEvents = async (filters: IGetEventsParams,
             mode: 'insensitive',
           },
         })),
+      });
+    }
+
+    if (Object.keys(restFilters).length > 0) {
+      andConditions.push({
+        AND: Object.keys(restFilters).map((key) => {
+          const value = (restFilters as Record<string, string>)[key];
+          const processedValue =
+            value === 'true' ? true : value === 'false' ? false : value;
+  
+          return {
+            [key]: {
+              equals: processedValue,
+            },
+          };
+        }),
       });
     }
   

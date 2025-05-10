@@ -21,7 +21,7 @@ const getAllEvents: RequestHandler = catchAsync(async (req, res) => {
     const options = pick(req.query, ['limit', 'page', 'sort_by', 'sort_order']);
     const result = await eventService.getAllEvents(filters, options)
     sendResponse(res, {
-        statusCode: status.CREATED,
+        statusCode: status.OK,
         message: "Events Fetched Successfully",
         success: true,
         data: result.data,
@@ -32,7 +32,7 @@ const getSingleEvent: RequestHandler = catchAsync(async (req, res) => {
     const { id } = req.params
     const result = await eventService.getSingleEvent(id)
     sendResponse(res, {
-        statusCode: status.CREATED,
+        statusCode: status.OK,
         message: "Event Fetched Successfully",
         success: true,
         data: result
@@ -42,7 +42,7 @@ const updateEvent: RequestHandler = catchAsync(async (req, res) => {
     const { id } = req.params
     const result = await eventService.updateEvent(id, req.body)
     sendResponse(res, {
-        statusCode: status.CREATED,
+        statusCode: status.OK,
         message: "Event Updated Successfully",
         success: true,
         data: result
@@ -52,7 +52,7 @@ const deleteEvent: RequestHandler = catchAsync(async (req, res) => {
     const { id } = req.params
     await eventService.deleteEvent(id)
     sendResponse(res, {
-        statusCode: status.CREATED,
+        statusCode: status.OK,
         message: "Event Deleted",
         success: true,
         data: null
