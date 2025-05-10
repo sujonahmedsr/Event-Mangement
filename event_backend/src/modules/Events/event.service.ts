@@ -29,72 +29,72 @@ const createEvent = async (payload: Event) => {
 // Get All Events
 const getAllEvents = async (filters: IGetEventsParams,
   options: IPaginationOptions,) => {
-    const { page, limit, skip } = calculatePagination(options);
-    const { search, ...restFilters } = filters;
-  
-    const andConditions: Prisma.EventWhereInput[] = [];
-  
-    if (search) {
-      andConditions.push({
-        OR: EventConstants.SearchableFields.map((field) => ({
-          [field]: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        })),
-      });
-    }
+  const { page, limit, skip } = calculatePagination(options);
+  const { search, ...restFilters } = filters;
 
-    if (Object.keys(restFilters).length > 0) {
-      andConditions.push({
-        AND: Object.keys(restFilters).map((key) => {
-          const value = (restFilters as Record<string, string>)[key];
-          const processedValue =
-            value === 'true' ? true : value === 'false' ? false : value;
-  
-          return {
-            [key]: {
-              equals: processedValue,
-            },
-          };
-        }),
-      });
-    }
-  
+  const andConditions: Prisma.EventWhereInput[] = [];
+
+  if (search) {
     andConditions.push({
-      is_deleted: false,
+      OR: EventConstants.SearchableFields.map((field) => ({
+        [field]: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      })),
     });
-  
-    const whereConditions: Prisma.EventWhereInput = {
-      AND: andConditions,
-    };
-  
-    const data = await prisma.event.findMany({
-      where: whereConditions,
-      skip,
-      take: limit,
-      orderBy:
-        options.sort_by && options.sort_order
-          ? {
-              [options.sort_by]: options.sort_order,
-            }
-          : {
-              created_at: 'desc',
-            },
+  }
+
+  if (Object.keys(restFilters).length > 0) {
+    andConditions.push({
+      AND: Object.keys(restFilters).map((key) => {
+        const value = (restFilters as Record<string, string>)[key];
+        const processedValue =
+          value === 'true' ? true : value === 'false' ? false : value;
+
+        return {
+          [key]: {
+            equals: processedValue,
+          },
+        };
+      }),
     });
-  
-    const total = await prisma.event.count({
-      where: whereConditions,
-    });
-  
-    return {
-      meta: {
-        page,
-        limit,
-        total,
-      },
-      data,
-    };
+  }
+
+  andConditions.push({
+    is_deleted: false,
+  });
+
+  const whereConditions: Prisma.EventWhereInput = {
+    AND: andConditions,
+  };
+
+  const data = await prisma.event.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sort_by && options.sort_order
+        ? {
+          [options.sort_by]: options.sort_order,
+        }
+        : {
+          created_at: 'desc',
+        },
+  });
+
+  const total = await prisma.event.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data,
+  };
 };
 
 // Get Single Event
