@@ -1,12 +1,14 @@
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import bcrypt from "bcrypt"
 import prisma from "../../utils/prisma";
 import ApiError from "../../errors/ApiError";
 import status from "http-status";
+import { generateToken } from "../../middlewares/jwtHelpers";
+import config from "../../config";
 
 const getAllUsers = async () => {
     const users = await prisma.user.findMany({
-        select:{
+        select: {
             id: true,
             name: true,
             email: true,
@@ -20,13 +22,15 @@ const getAllUsers = async () => {
 }
 
 const getSingleUser = async (id: string) => {
-    const user = await prisma.user.findUnique({ where: { id }, 
+    const user = await prisma.user.findUnique({
+        where: { id },
         include: {
             event: true,
             received_invitations: true,
             sent_invitations: true
-    } });
-    if(!user){
+        }
+    });
+    if (!user) {
         throw new ApiError(status.NOT_FOUND, "User not found.")
     }
     return user
@@ -34,32 +38,49 @@ const getSingleUser = async (id: string) => {
 
 const createUser = async (
     payload: User
-): Promise<User> => {
+) => {
 
-    const hashedPassword: string = await bcrypt.hash(payload.password, 12);
+    const isUserExists = await prisma.user.findFirst({
+        where: { email: payload.email },
+    });
 
-    const userData = {
-        name: payload.name,
-        email: payload.email,
-        password: hashedPassword,
-    };
+    if (isUserExists) {
+        throw new ApiError(status.CONFLICT, 'User already exists');
+    }
 
-    const result = await prisma.$transaction(async (tx) => {
-        const isExist = await tx.user.findUnique({
-            where: {
-                email: payload.email
-            }
-        })
-        if(isExist){
-            throw new ApiError(status.BAD_REQUEST, "User Already Exist.")
-        }
-        const create = await tx.user.create({
-            data: userData
-        })
-        return create
-    })
+    const hashedPassword = await bcrypt.hash(
+        payload.password,
+        Number(12),
+    );
 
-    return result;
+    const user = await prisma.user.create({
+        data: {
+            name: payload.name,
+            email: payload.email,
+            password: hashedPassword,
+            role: Role.USER,
+        },
+    });
+
+    const jwtPayload = {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+  };
+
+  const access_token = generateToken(
+    jwtPayload,
+    config.jwt.jwt_secret as string,
+    config.jwt.expires_in as string,
+  );
+
+  const refresh_token = generateToken(
+    jwtPayload,
+    config.jwt.refresh_token_secret as string,
+    config.jwt.refresh_token_expires_in as string,
+  );
+
+  return { access_token, refresh_token };
 };
 export const userService = {
     createUser,

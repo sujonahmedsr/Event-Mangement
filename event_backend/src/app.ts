@@ -9,7 +9,11 @@ const app: Application = express();
 // middlewares 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',  // or use an array for multiple origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // 👈 this is required when using `credentials: 'include'` on frontend
+}));
 
 app.get("/", (req: Request, res: Response) => {
   res.send({

@@ -15,12 +15,14 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   });
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
-    await userService.createUser(req.body);
+    const result = await userService.createUser(req.body);
+    res.cookie('REFRESH_TOKEN', result.refresh_token,
+        { expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) });
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
         message: "User Created successfully!",
-        data: null,
+        data: result,
     });
 });
 
