@@ -10,19 +10,22 @@ export const eventApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.event],
     }),
-    getFeaturedEvent: builder.query({
-      query: () => "/events/featured",
-      providesTags: [tagTypes.event],
-    }),
     getEventById: builder.query({
       query: (id) => `/event/${id}`,
       providesTags: [tagTypes.event],
+    }),
+    joinEvent: builder.mutation({
+      query: ({ eventId }) => ({
+        url: `/events/${eventId}/join`,
+        method: "POST",
+      }),
+      invalidatesTags: [tagTypes.event],
     }),
   }),
 });
 
 export const {
   useGetEventsQuery,
-  useGetFeaturedEventQuery,
+  useJoinEventMutation,
   useGetEventByIdQuery,
 } = eventApi;
