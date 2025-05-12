@@ -14,9 +14,14 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:3000', // or use an array for multiple origins
+    origin: [
+        'http://localhost:3000',
+        'https://bong-events-a9.vercel.app',
+        'https://event-mangement-zeta.vercel.app',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // 👈 this is required when using `credentials: 'include'` on frontend
+    allowedHeaders: 'Content-Type, Authorization, Origin, X-Requested-With, Accept',
+    credentials: true,
 }));
 app.get("/", (req, res) => {
     res.send({
