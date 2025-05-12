@@ -71,6 +71,15 @@ const getAllEvents = async (filters: IGetEventsParams,
 
   const data = await prisma.event.findMany({
     where: whereConditions,
+    include: {
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      }
+    },
     skip,
     take: limit,
     orderBy:
