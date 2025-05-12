@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Calendar,
   Users,
@@ -18,7 +17,6 @@ import {
   Mail,
   Star,
   TrendingUp,
-  Activity,
 } from "lucide-react";
 import { formatDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
@@ -40,31 +38,6 @@ const upcomingEvents = [
     venue: "Online",
     participants: 28,
     capacity: 50,
-  },
-];
-
-const pendingInvitations = [
-  {
-    id: "inv1",
-    event: {
-      id: "3",
-      title: "Networking Mixer",
-      date_time: "2025-05-25T18:00:00",
-    },
-    sender: {
-      name: "Sarah Williams",
-    },
-  },
-  {
-    id: "inv2",
-    event: {
-      id: "4",
-      title: "Charity Gala",
-      date_time: "2025-08-15T19:00:00",
-    },
-    sender: {
-      name: "Michael Brown",
-    },
   },
 ];
 
@@ -228,81 +201,6 @@ export default function DashboardPage() {
                 </div>
               )}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Pending Invitations */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-primary" />
-              Pending Invitations
-            </CardTitle>
-            <CardDescription>
-              You have {pendingInvitations.length} pending invitations.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Invitations Section */}
-            {pendingInvitations.length > 0 && (
-              <div className="space-y-4">
-                {pendingInvitations.map((invitation) => (
-                  <div
-                    key={invitation.id}
-                    className="flex items-start gap-3 rounded-lg border p-3"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="text-xs">
-                        {invitation.sender.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 space-y-1">
-                      <p className="text-sm">
-                        <span className="font-medium">
-                          {invitation.sender.name}
-                        </span>{" "}
-                        invited you to{" "}
-                        <Link
-                          href={`/events/${invitation.event.id}`}
-                          className="font-medium text-primary hover:underline"
-                        >
-                          {invitation.event.title}
-                        </Link>
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatDate(invitation.event.date_time)}
-                      </p>
-                      <div className="flex gap-2 pt-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 text-xs"
-                        >
-                          Decline
-                        </Button>
-                        <Button size="sm" className="h-7 text-xs">
-                          Accept
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Empty State */}
-            {pendingInvitations.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <Activity className="h-12 w-12 text-muted-foreground mb-3" />
-                <h3 className="text-lg font-medium">No pending invitations</h3>
-                <p className="text-muted-foreground mt-1">
-                  You have no pending invitations.
-                </p>
-              </div>
-            )}
           </CardContent>
         </Card>
       </div>
