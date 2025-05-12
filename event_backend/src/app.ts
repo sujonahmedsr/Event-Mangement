@@ -10,7 +10,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:3000',  // or use an array for multiple origins
+  origin: ['http://localhost:3000', 'https://bong-events-a9.vercel.app'],  // or use an array for multiple origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // 👈 this is required when using `credentials: 'include'` on frontend
 }));
