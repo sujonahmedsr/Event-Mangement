@@ -4,7 +4,14 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, Users, ArrowRight, Star } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  ArrowRight,
+  Star,
+} from "lucide-react";
 import { formatDate, formatTime } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { IEvent } from "@/lib/types";
@@ -21,42 +28,34 @@ export default function EventCard({ event }: EventCardProps) {
         event.is_paid ? "border-primary/20" : "border-border"
       )}
     >
-      {/* Card top decoration */}
+      {/* Top line decoration */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40"></div>
 
-      {/* Featured ribbon (replaces badge) */}
+      {/* Featured ribbon */}
       {event.is_private && (
         <div className="absolute -right-10 top-5 rotate-45 bg-primary text-primary-foreground px-10 py-1 text-xs font-medium shadow-md z-10">
           <div className="flex items-center justify-center gap-1">
             <Star className="h-3 w-3" />
-            <span>Featured</span>
+            <span>Private</span>
           </div>
         </div>
       )}
 
-      {/* Card content */}
+      {/* Card Content */}
       <div className="flex flex-col p-5 flex-grow">
         <div className="space-y-2.5 mb-4">
           <div className="flex flex-wrap gap-1.5 mb-2">
             <Badge
               variant="outline"
-              className={event.is_paid ? "badge-virtual" : "badge-in-person"}
+              className={event.is_private ? "badge-private" : "badge-public"}
             >
-              {event.is_private ? "Virtual" : "In Person"}
-            </Badge>
-            <Badge
-              variant="outline"
-              className={event.is_private ? "badge-public" : "badge-private"}
-            >
-              {event.is_private ? "Public" : "Private"}
+              {event.is_private ? "Private" : "Public"}
             </Badge>
             <Badge
               variant="outline"
               className={event.is_paid ? "badge-paid" : "badge-free"}
             >
-              {event.is_paid
-                ? `$${Number(event.fee).toFixed(2)}`
-                : "Free"}
+              {event.is_paid ? `$${event.fee.toFixed(2)}` : "Free"}
             </Badge>
           </div>
 
@@ -80,16 +79,20 @@ export default function EventCard({ event }: EventCardProps) {
           </div>
           <div className="flex items-center gap-2 text-sm">
             <MapPin className="h-4 w-4 text-primary" />
-            <span className="line-clamp-1">{event.location || "Online"}</span>
+            <span className="line-clamp-1">
+              {event.location || "Online"}
+            </span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <Users className="h-4 w-4 text-primary" />
-            {/* <span>{event.creator}</span> */}
+            <span className="line-clamp-1">
+              Created by {event.creator?.name}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Card footer */}
+      {/* Footer with button */}
       <div className="p-5 pt-0 mt-4">
         <Link href={`/events/${event.id}`} className="w-full">
           <Button

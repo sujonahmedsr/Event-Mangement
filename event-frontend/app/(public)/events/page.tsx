@@ -41,14 +41,11 @@ export default function EventsPage() {
     search: searchParams.get("search") || "",
     sort_by: searchParams.get("sort_by") || "created_at",
     sort_order: searchParams.get("sort_order") || "desc",
-    is_public: searchParams.get("is_public")
-      ? searchParams.get("is_public") === "true"
+    is_private: searchParams.get("is_private")
+      ? searchParams.get("is_private") === "true"
       : null,
     is_paid: searchParams.get("is_paid")
       ? searchParams.get("is_paid") === "true"
-      : null,
-    is_virtual: searchParams.get("is_virtual")
-      ? searchParams.get("is_virtual") === "true"
       : null,
   };
 
@@ -76,9 +73,6 @@ export default function EventsPage() {
     sanitizeParams(params)
   );
 
-  console.log(eventsData);
-  
-
   // Check screen size for responsive behavior
   useEffect(() => {
     const checkScreenSize = () => {
@@ -105,12 +99,10 @@ export default function EventsPage() {
   // Active filters display
   const activeFilters = (() => {
     const filters: string[] = [];
-    if (params.is_public === true) filters.push("Public");
-    if (params.is_public === false) filters.push("Private");
+    if (params.is_private === true) filters.push("Private");
+    if (params.is_private === false) filters.push("Public");
     if (params.is_paid === true) filters.push("Paid");
     if (params.is_paid === false) filters.push("Free");
-    if (params.is_virtual === true) filters.push("Virtual");
-    if (params.is_virtual === false) filters.push("In-Person");
     return filters;
   })();
 
@@ -122,9 +114,8 @@ export default function EventsPage() {
       search: "",
       sort_by: "created_at",
       sort_order: "asc",
-      is_public: null,
+      is_private: null,
       is_paid: null,
-      is_virtual: null,
     });
     setSearchInput("");
   };
@@ -132,11 +123,9 @@ export default function EventsPage() {
   // Remove a specific filter
   const removeFilter = (filter: string) => {
     if (filter === "Public" || filter === "Private") {
-      setParams((prev) => ({ ...prev, is_public: null }));
+      setParams((prev) => ({ ...prev, is_private: null }));
     } else if (filter === "Paid" || filter === "Free") {
       setParams((prev) => ({ ...prev, is_paid: null }));
-    } else if (filter === "Virtual" || filter === "In-Person") {
-      setParams((prev) => ({ ...prev, is_virtual: null }));
     }
   };
 
@@ -198,12 +187,12 @@ export default function EventsPage() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="public"
-                checked={params.is_public === true}
+                checked={params.is_private === true}
                 onCheckedChange={(checked) =>
                   setParams((prev) => ({
                     ...prev,
                     page: 1,
-                    is_public: checked ? true : null,
+                    is_private: checked ? true : null,
                   }))
                 }
               />
@@ -214,12 +203,12 @@ export default function EventsPage() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="private"
-                checked={params.is_public === false}
+                checked={params.is_private === false}
                 onCheckedChange={(checked) =>
                   setParams((prev) => ({
                     ...prev,
                     page: 1,
-                    is_public: checked ? false : null,
+                    is_private: checked ? false : null,
                   }))
                 }
               />
@@ -272,49 +261,7 @@ export default function EventsPage() {
             </div>
           </CollapsibleContent>
         </Collapsible>
-
         <Separator />
-
-        <Collapsible defaultOpen>
-          <CollapsibleTrigger className="flex w-full items-center justify-between py-2 font-medium">
-            Location
-            <ChevronDown className="h-4 w-4 text-muted-foreground" />
-          </CollapsibleTrigger>
-          <CollapsibleContent className="pt-2 pb-4 space-y-2">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="virtual"
-                checked={params.is_virtual === true}
-                onCheckedChange={(checked) =>
-                  setParams((prev) => ({
-                    ...prev,
-                    page: 1,
-                    is_virtual: checked ? true : null,
-                  }))
-                }
-              />
-              <Label htmlFor="virtual" className="text-sm">
-                Virtual Events
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="in-person"
-                checked={params.is_virtual === false}
-                onCheckedChange={(checked) =>
-                  setParams((prev) => ({
-                    ...prev,
-                    page: 1,
-                    is_virtual: checked ? false : null,
-                  }))
-                }
-              />
-              <Label htmlFor="in-person" className="text-sm">
-                In-Person Events
-              </Label>
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
       </div>
     </div>
   );
@@ -363,10 +310,10 @@ export default function EventsPage() {
               <SelectItem value="created_at-asc">
                 Date (Oldest First)
               </SelectItem>
-              <SelectItem value="registration_fee-asc">
+              <SelectItem value="fee-asc">
                 Price (Low to High)
               </SelectItem>
-              <SelectItem value="registration_fee-desc">
+              <SelectItem value="fee-desc">
                 Price (High to Low)
               </SelectItem>
               <SelectItem value="title-asc">Title (A-Z)</SelectItem>
