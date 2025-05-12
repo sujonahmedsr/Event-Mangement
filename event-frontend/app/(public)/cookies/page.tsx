@@ -39,7 +39,7 @@ export default function CookiePolicyPage() {
 
             <div className="prose max-w-none dark:prose-invert">
               <p>
-                This Cookie Policy explains how EventCraft (&quot;we&quot;,
+                This Cookie Policy explains how BongEvents (&quot;we&quot;,
                 &quot;us&quot;, and &quot;our&quot;) uses cookies and similar
                 technologies to recognize you when you visit our website. It
                 explains what these technologies are and why we use them, as
@@ -55,7 +55,7 @@ export default function CookiePolicyPage() {
                 information.
               </p>
               <p>
-                Cookies set by the website owner (in this case, EventCraft) are
+                Cookies set by the website owner (in this case, BongEvents) are
                 called &quot;first-party cookies&quot;. Cookies set by parties
                 other than the website owner are called &quot;third-party
                 cookies&quot;. Third-party cookies enable third-party features
@@ -186,7 +186,7 @@ export default function CookiePolicyPage() {
               <h3>Where can you get further information?</h3>
               <p>
                 If you have any questions about our use of cookies or other
-                technologies, please email us at privacy@EventCraft.com.
+                technologies, please email us at privacy@BongEvents.com.
               </p>
             </div>
           </CardContent>

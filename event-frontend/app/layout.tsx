@@ -6,7 +6,7 @@ import GlobalProvider from "@/components/shared/global-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "EventCraft - Plan, Join, Celebrate",
+  title: "BongEvents - Plan, Join, Celebrate",
   description: "Your all-in-one platform for event planning and participation",
 };
 

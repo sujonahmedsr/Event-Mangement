@@ -10,7 +10,7 @@ export default function AboutPage() {
       {/* Hero Section */}
       <div className="text-center mb-16">
         <h1 className="text-4xl font-bold tracking-tight mb-4">
-          About EventCraft
+          About BongEvents
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
           We&apos;re on a mission to bring people together through memorable
@@ -28,7 +28,7 @@ export default function AboutPage() {
             Creating connections since 2020
           </h2>
           <p className="text-muted-foreground">
-            EventCraft was founded with a simple idea: to make event planning
+            BongEvents was founded with a simple idea: to make event planning
             and participation seamless and enjoyable. What started as a small
             project has grown into a platform that connects thousands of event
             organizers with participants around the world.
@@ -70,7 +70,7 @@ export default function AboutPage() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold tracking-tight mb-4">Our Values</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            These core principles guide everything we do at EventCraft
+            These core principles guide everything we do at BongEvents
           </p>
         </div>
 
@@ -123,7 +123,7 @@ export default function AboutPage() {
             Meet Our Team
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            The passionate people behind EventCraft
+            The passionate people behind BongEvents
           </p>
         </div>
 
@@ -204,7 +204,7 @@ export default function AboutPage() {
           </h2>
           <p className="text-muted-foreground mb-6">
             Whether you&apos;re organizing events or looking to participate,
-            EventCraft has everything you need to create memorable experiences.
+            BongEvents has everything you need to create memorable experiences.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg">Get Started</Button>

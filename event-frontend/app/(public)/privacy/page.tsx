@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
 
             <div className="prose max-w-none dark:prose-invert">
               <p>
-                At EventCraft, we take your privacy seriously. This Privacy
+                At BongEvents, we take your privacy seriously. This Privacy
                 Policy explains how we collect, use, disclose, and safeguard
                 your information when you visit our website or use our platform.
                 Please read this privacy policy carefully. If you do not agree
@@ -104,7 +104,7 @@ export default function PrivacyPolicyPage() {
                 <li>
                   If we believe your actions are inconsistent with our user
                   agreements or policies, or to protect the rights, property,
-                  and safety of EventCraft or others
+                  and safety of BongEvents or others
                 </li>
               </ul>
 
@@ -152,7 +152,7 @@ export default function PrivacyPolicyPage() {
                 contact us at:
               </p>
               <p>
-                Email: privacy@EventCraft.com
+                Email: privacy@BongEvents.com
                 <br />
                 Address: 123 Event Street, Suite 456, San Francisco, CA 94103
               </p>

@@ -75,7 +75,7 @@ export default function Navbar() {
                     <div className="absolute inset-0 bg-primary/10 rounded-md rotate-45 transform origin-center"></div>
                     <Calendar className="h-5 w-5 text-primary relative z-10" />
                   </div>
-                  <span className="font-bold text-xl">EventCraft</span>
+                  <span className="font-bold text-xl">BongEvents</span>
                 </Link>
                 <nav className="flex flex-col gap-4">
                   {routes.map((route) => (
@@ -103,7 +103,7 @@ export default function Navbar() {
               <div className="absolute inset-0 bg-primary/10 rounded-md rotate-45 transform origin-center"></div>
               <Calendar className="h-5 w-5 text-primary relative z-10" />
             </div>
-            <span className="text-primary font-bold text-xl">EventCraft</span>
+            <span className="text-primary font-bold text-xl">BongEvents</span>
           </Link>
         </div>
 

@@ -87,7 +87,7 @@ export default function DashboardLayout({
                   <Calendar className="h-5 w-5 text-primary relative z-10" />
                 </div>
                 <span className="font-bold text-xl text-primary">
-                  EventCraft
+                  BongEvents
                 </span>
               </Link>
             </div>

@@ -7,7 +7,7 @@ export default function Features() {
       <Container>
         <div className="text-center mb-10">
           <h2 className="text-2xl font-bold tracking-tight md:text-3xl mb-2">
-            Why Choose EventCraft?
+            Why Choose BongEvents?
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Our platform offers everything you need to create, manage, and

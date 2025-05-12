@@ -32,7 +32,7 @@ export default function TermsOfServicePage() {
             <div className="prose max-w-none dark:prose-invert">
               <p>
                 These Terms of Service (&quot;Terms&quot;) govern your access to
-                and use of the EventCraft platform, including any content,
+                and use of the BongEvents platform, including any content,
                 functionality, and services offered on or through our website
                 (the &quot;Service&quot;). By registering with us or by using
                 our Service, you agree to be bound by these Terms.
@@ -91,12 +91,12 @@ export default function TermsOfServicePage() {
               <p>
                 As an event organizer, you are responsible for ensuring that
                 your events comply with all applicable laws and regulations.
-                EventCraft reserves the right to remove any event that violates
+                BongEvents reserves the right to remove any event that violates
                 these Terms or is otherwise objectionable.
               </p>
               <p>
                 As an event participant, you agree to comply with all rules and
-                regulations set by the event organizer. EventCraft is not
+                regulations set by the event organizer. BongEvents is not
                 responsible for the conduct of event organizers or participants.
               </p>
 
@@ -116,7 +116,7 @@ export default function TermsOfServicePage() {
               <h3>7. Refunds</h3>
               <p>
                 Refund policies for events are set by the event organizers.
-                EventCraft is not responsible for processing refunds for events
+                BongEvents is not responsible for processing refunds for events
                 unless otherwise specified.
               </p>
 
@@ -135,7 +135,7 @@ export default function TermsOfServicePage() {
 
               <h3>9. Limitation of Liability</h3>
               <p>
-                In no event shall EventCraft, nor its directors, employees,
+                In no event shall BongEvents, nor its directors, employees,
                 partners, agents, suppliers, or affiliates, be liable for any
                 indirect, incidental, special, consequential or punitive
                 damages, including without limitation, loss of profits, data,
@@ -162,7 +162,7 @@ export default function TermsOfServicePage() {
                 at:
               </p>
               <p>
-                Email: legal@EventCraft.com
+                Email: legal@BongEvents.com
                 <br />
                 Address: 123 Event Street, Suite 456, San Francisco, CA 94103
               </p>

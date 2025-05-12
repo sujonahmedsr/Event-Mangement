@@ -80,19 +80,19 @@ export default function ContactPage() {
                       For general inquiries:
                     </p>
                     <a
-                      href="mailto:info@eventcraft.com"
+                      href="mailto:info@BongEvents.com"
                       className="text-sm text-primary hover:underline"
                     >
-                      info@eventcraft.com
+                      info@BongEvents.com
                     </a>
                     <p className="text-sm text-muted-foreground mt-2 mb-1">
                       For support:
                     </p>
                     <a
-                      href="mailto:support@eventcraft.com"
+                      href="mailto:support@BongEvents.com"
                       className="text-sm text-primary hover:underline"
                     >
-                      support@eventcraft.com
+                      support@BongEvents.com
                     </a>
                   </div>
                 </div>

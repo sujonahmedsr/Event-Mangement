@@ -4,7 +4,7 @@ import { ImageResponse } from "next/og";
 export const runtime = "edge";
 
 // Image metadata
-export const alt = "EventCraft - Plan, Join, Celebrate";
+export const alt = "BongEvents - Plan, Join, Celebrate";
 export const size = {
   width: 1200,
   height: 630,
@@ -104,7 +104,7 @@ export default async function Image() {
               color: "white",
             }}
           >
-            EventCraft
+            BongEvents
           </div>
         </div>
 
