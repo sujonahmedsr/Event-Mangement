@@ -65,15 +65,15 @@ export default function EventSlider({ events }: EventSliderProps) {
                     <CardHeader className="pb-3">
                       <div className="flex flex-wrap gap-2">
                         <Badge
-                          variant={event.is_public ? "default" : "outline"}
+                          variant={event.is_private ? "default" : "outline"}
                         >
-                          {event.is_public ? "Public" : "Private"}
+                          {event.is_private ? "Public" : "Private"}
                         </Badge>
                         <Badge
                           variant={event.is_paid ? "secondary" : "outline"}
                         >
                           {event.is_paid
-                            ? `Paid ($${event.registration_fee})`
+                            ? `Paid ($${event.fee})`
                             : "Free"}
                         </Badge>
                       </div>
@@ -132,7 +132,7 @@ export default function EventSlider({ events }: EventSliderProps) {
                             <circle cx="12" cy="10" r="3"></circle>
                           </svg>
                           <span className="line-clamp-1 text-muted-foreground">
-                            {event.venue}
+                            {event.location}
                           </span>
                         </div>
                       </div>
