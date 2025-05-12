@@ -9,11 +9,21 @@ const app: Application = express();
 // middlewares 
 app.use(express.json());
 app.use(cookieParser());
+
+const allowedOrigins = ['http://localhost:3000', 'https://bong-events-a9.vercel.app'];
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://bong-events-a9.vercel.app'],  // or use an array for multiple origins
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // 👈 this is required when using `credentials: 'include'` on frontend
+  credentials: true,
 }));
+
 
 app.get("/", (req: Request, res: Response) => {
   res.send({
