@@ -33,7 +33,7 @@ import EventDetailsPageSkeleton from "../_components/skeletion";
 
 interface IEventDetailsUser {
   id: string;
-  full_name: string;
+  name: string;
   email: string;
 }
 
@@ -54,19 +54,17 @@ interface IEventDetails {
   title: string;
   description: string;
   date_time: string;
-  venue: string | null;
-  is_featured: boolean;
-  is_public: boolean;
+  location: string | null;
+  is_private: boolean;
   is_paid: boolean;
-  is_virtual: boolean;
-  registration_fee: number;
+  fee: number;
   status: string;
-  organizer: {
-    full_name: string;
+  creator: {
+    name: string;
     email: string;
   };
-  participants: IEventDetailsParticipant[] | [];
-  reviews: IEventDetailsReview[] | [];
+  Participant: IEventDetailsParticipant[] | [];
+  review: IEventDetailsReview[] | [];
 }
 
 export default function EventDetailsPage({
@@ -114,9 +112,9 @@ export default function EventDetailsPage({
 
   // Calculate average rating
   const averageRating =
-    event.reviews.length > 0
-      ? event.reviews.reduce((sum, review) => sum + review.rating, 0) /
-        event.reviews.length
+    event.review.length > 0
+      ? event.review.reduce((sum, review) => sum + review.rating, 0) /
+      event.review.length
       : 0;
 
   return (
@@ -137,32 +135,36 @@ export default function EventDetailsPage({
             <div className="flex flex-wrap gap-2">
               <Badge
                 variant="outline"
-                className={
-                  event.is_virtual ? "badge-virtual" : "badge-in-person"
-                }
+                className={event.location === "Online" ? "badge-virtual" : "badge-in-person"}
               >
-                {event.is_virtual ? "Virtual" : "In Person"}
+                {event.location === "Online" ? "Virtual" : "In Person"}
               </Badge>
+
               <Badge
                 variant="outline"
-                className={event.is_public ? "badge-public" : "badge-private"}
+                className={event.is_private ? "badge-private" : "badge-public"}
               >
-                {event.is_public ? "Public" : "Private"}
+                {event.is_private ? "Private" : "Public"}
               </Badge>
+
               <Badge
                 variant="outline"
                 className={event.is_paid ? "badge-paid" : "badge-free"}
               >
                 {event.is_paid ? "Paid" : "Free"}
               </Badge>
-              <Badge variant="secondary">{event.status}</Badge>
+
+              <Badge variant="secondary">
+                {event.status}
+              </Badge>
             </div>
+
 
             <h1 className="text-3xl font-bold">{event.title}</h1>
 
             <div className="flex items-center gap-2 text-muted-foreground">
               <User className="h-4 w-4" />
-              <span>Organized by {event.organizer.full_name}</span>
+              <span>Organized by {event.creator.name}</span>
             </div>
           </div>
 
@@ -210,7 +212,7 @@ export default function EventDetailsPage({
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Location</p>
-                      <p className="font-medium">{event.venue || "Online"}</p>
+                      <p className="font-medium">{event.location || "Online"}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -225,7 +227,7 @@ export default function EventDetailsPage({
                         Participants
                       </p>
                       <p className="font-medium">
-                        {event.participants.length} attending
+                        {event.Participant.length} attending
                       </p>
                     </div>
                   </CardContent>
@@ -246,9 +248,9 @@ export default function EventDetailsPage({
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {event.participants.length > 0 ? (
+                  {event.Participant.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {event.participants.map(
+                      {event.Participant.map(
                         (participant: IEventDetailsParticipant) => (
                           <div
                             key={participant.user.id}
@@ -256,7 +258,7 @@ export default function EventDetailsPage({
                           >
                             <Avatar className="h-12 w-12 border">
                               <AvatarFallback className="bg-primary/10 text-primary">
-                                {participant.user.full_name
+                                {participant.user.name
                                   .split(" ")
                                   .map((n) => n[0])
                                   .join("")}
@@ -264,7 +266,7 @@ export default function EventDetailsPage({
                             </Avatar>
                             <div className="min-w-0">
                               <p className="font-medium truncate">
-                                {participant.user.full_name}
+                                {participant.user.name}
                               </p>
                             </div>
                           </div>
@@ -280,7 +282,7 @@ export default function EventDetailsPage({
                     </div>
                   )}
                 </CardContent>
-                {event.participants.length > 0 && (
+                {event.Participant.length > 0 && (
                   <CardFooter className="flex justify-center border-t pt-4">
                     <Button variant="outline" size="sm">
                       View All Participants
@@ -296,7 +298,7 @@ export default function EventDetailsPage({
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="space-y-1">
                       <CardTitle>Reviews</CardTitle>
-                      {event.reviews.length > 0 && (
+                      {event.review.length > 0 && (
                         <div className="flex items-center gap-2">
                           <div className="flex">
                             {[1, 2, 3, 4, 5].map((star) => (
@@ -315,8 +317,8 @@ export default function EventDetailsPage({
                             {averageRating.toFixed(1)}
                           </span>
                           <span className="text-muted-foreground">
-                            ({event.reviews.length}{" "}
-                            {event.reviews.length === 1 ? "review" : "reviews"})
+                            ({event.review.length}{" "}
+                            {event.review.length === 1 ? "review" : "reviews"})
                           </span>
                         </div>
                       )}
@@ -324,9 +326,9 @@ export default function EventDetailsPage({
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {event.reviews.length > 0 ? (
+                  {event.review.length > 0 ? (
                     <div className="space-y-6">
-                      {event.reviews.map((review) => {
+                      {event.review.map((review) => {
                         const isExpanded = expandedReviews.includes(review.id);
                         const commentLength = review.comment.length;
                         const shouldTruncate =
@@ -341,7 +343,7 @@ export default function EventDetailsPage({
                               <div className="flex items-center gap-3">
                                 <Avatar className="h-10 w-10 border">
                                   <AvatarFallback className="bg-primary/10 text-primary">
-                                    {review.user.full_name
+                                    {review.user.name
                                       .split(" ")
                                       .map((n) => n[0])
                                       .join("")}
@@ -349,7 +351,7 @@ export default function EventDetailsPage({
                                 </Avatar>
                                 <div>
                                   <span className="font-medium">
-                                    {review.user.full_name}
+                                    {review.user.name}
                                   </span>
                                   <div className="text-xs text-muted-foreground">
                                     {new Date(
@@ -416,10 +418,10 @@ export default function EventDetailsPage({
                     </div>
                   )}
                 </CardContent>
-                {event.reviews.length > 0 && (
+                {event.review.length > 0 && (
                   <CardFooter className="flex justify-between border-t pt-4">
                     <Button variant="outline">Write a Review</Button>
-                    {event.reviews.length > 4 && (
+                    {event.review.length > 4 && (
                       <Button variant="ghost" className="gap-1">
                         View All Reviews
                         <ChevronRight className="h-4 w-4" />
@@ -441,7 +443,7 @@ export default function EventDetailsPage({
                     Registration Fee
                   </p>
                   <p className="text-3xl font-bold">
-                    {formatCurrency(event.registration_fee)}
+                    {formatCurrency(event.fee)}
                   </p>
                 </div>
               ) : (
@@ -457,7 +459,7 @@ export default function EventDetailsPage({
 
               <div className="pt-2">
                 <Button className="w-full gap-2">
-                  {event.is_public ? (
+                  {event.is_private ? (
                     event.is_paid ? (
                       <>
                         <CreditCard className="h-4 w-4" />
@@ -491,14 +493,14 @@ export default function EventDetailsPage({
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarFallback>
-                    {event.organizer.full_name
+                    {event.creator.name
                       .split(" ")
                       .map((n) => n[0])
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium">{event.organizer.full_name}</p>
+                  <p className="font-medium">{event.creator.name}</p>
                   <p className="text-sm text-muted-foreground">Organizer</p>
                 </div>
               </div>

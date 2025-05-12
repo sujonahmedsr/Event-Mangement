@@ -111,7 +111,29 @@ const getSingleEvent = async (id: string) => {
   const event = await prisma.event.findUnique({
     where: { id, is_deleted: false },
     include: {
-      creator: true
+      creator: true,
+      Participant: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        }
+      },
+      review: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        }
+      }
     }
   });
 
